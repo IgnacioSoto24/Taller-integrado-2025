@@ -1,0 +1,27 @@
+{% extends 'clima/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Agregar Nueva Ciudad</h2>
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  {% if mensaje %}
+    <div class="alert alert-success">{{ mensaje }}</div>
+  {% endif %}
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="nombre">Nombre de la Ciudad</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Valparaíso" required>
+    </div>
+    <div class="form-group">
+      <label for="pais">Código del País</label>
+      <input type="text" class="form-control" id="pais" name="pais" value="CL" maxlength="2" required>
+      <small class="form-text text-muted">Ej: CL para Chile, AR para Argentina</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Agregar Ciudad</button>
+    <a href="{% url 'inicio' %}" class="btn btn-secondary">Volver al inicio</a>
+  </form>
+</div>
+{% endblock %}

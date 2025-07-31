@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Clima reciente en {{ ciudad.nombre }}, {{ ciudad.pais }}</h2>
+<ul class="list-group">
+  {% for clima in climas %}
+    <li class="list-group-item">
+      {{ clima.fecha_consulta }} - {{ clima.descripcion }} - {{ clima.temperatura }}°C
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'graficos' %}" class="btn btn-secondary mt-3">Volver a Gráficos</a>
+{% endblock %}

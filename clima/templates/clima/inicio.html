@@ -1,0 +1,45 @@
+{% extends 'clima/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2 class="mb-4">Clima Actual por Ciudad</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST" action="{% url 'actualizar_clima' %}" class="mb-3">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning">Actualizar Clima de Todas las Ciudades</button>
+    <a href="{% url 'agregar_ciudad' %}" class="btn btn-success">Agregar Ciudad</a>
+  </form>
+
+  {% if datos %}
+    <div class="row">
+      {% for dato in datos %}
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ dato.ciudad }}, {{ dato.pais }}</h5>
+              <p class="card-text">
+                <img src="{{ dato.icono_url }}" alt="Icono clima"><br>
+                {{ dato.descripcion|capfirst }}<br>
+                <strong>{{ dato.temperatura }} °C</strong><br>
+                Humedad: {{ dato.humedad }} %<br>
+                Presión: {{ dato.presion }} hPa<br>
+                <small class="text-muted">Actualizado: {{ dato.fecha|date:"d M Y H:i" }}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No hay ciudades registradas aún.</p>
+  {% endif %}
+
+</div>
+{% endblock %}

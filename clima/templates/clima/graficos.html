@@ -1,0 +1,112 @@
+{% extends 'clima/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Gráficos del Clima</h2>
+
+  <!-- Tarjetas resumen -->
+  <div class="row" id="tarjetas"></div>
+
+  <!-- Gráfico de líneas: temperatura histórica -->
+  <div class="card my-4">
+    <div class="card-body">
+      <h5>Temperatura Histórica</h5>
+      <canvas id="graficoLineas"></canvas>
+    </div>
+  </div>
+
+  <!-- Gráfico de barras: temperatura actual -->
+  <div class="card my-4">
+    <div class="card-body">
+      <h5>Temperatura Actual por Ciudad</h5>
+      <canvas id="graficoBarras"></canvas>
+    </div>
+  </div>
+
+  <!-- Radar: humedad/presión -->
+  <div class="card my-4">
+    <div class="card-body">
+      <h5>Humedad y Presión Actual</h5>
+      <canvas id="graficoRadar"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const historico = {{ historico|safe }};
+const actuales = {{ actuales|safe }};
+
+// Tarjetas
+const tarjetas = document.getElementById('tarjetas');
+actuales.forEach(c => {
+  tarjetas.innerHTML += `
+    <div class="col-md-3 mb-3">
+      <div class="card text-center bg-light">
+        <div class="card-body">
+          <h5>${c.ciudad}</h5>
+          <p><strong>${c.temperatura}°C</strong></p>
+          <p>Humedad: ${c.humedad}%</p>
+          <p>Presión: ${c.presion} hPa</p>
+        </div>
+      </div>
+    </div>`;
+});
+
+// Gráfico de líneas
+const ctxLine = document.getElementById('graficoLineas').getContext('2d');
+let datasets = [];
+for (let ciudad in historico) {
+  datasets.push({
+    label: ciudad,
+    data: historico[ciudad].temperaturas,
+    borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
+    fill: false,
+    tension: 0.2
+  });
+}
+new Chart(ctxLine, {
+  type: 'line',
+  data: {
+    labels: historico[Object.keys(historico)[0]].fechas,
+    datasets: datasets
+  }
+});
+
+// Gráfico de barras
+new Chart(document.getElementById('graficoBarras'), {
+  type: 'bar',
+  data: {
+    labels: actuales.map(c => c.ciudad),
+    datasets: [{
+      label: 'Temperatura (°C)',
+      data: actuales.map(c => c.temperatura),
+      backgroundColor: 'rgba(54, 162, 235, 0.6)'
+    }]
+  }
+});
+
+// Radar
+new Chart(document.getElementById('graficoRadar'), {
+  type: 'radar',
+  data: {
+    labels: actuales.map(c => c.ciudad),
+    datasets: [
+      {
+        label: 'Humedad (%)',
+        data: actuales.map(c => c.humedad),
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        borderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: 'rgba(75,192,192,1)'
+      },
+      {
+        label: 'Presión (hPa)',
+        data: actuales.map(c => c.presion),
+        backgroundColor: 'rgba(255,99,132,0.2)',
+        borderColor: 'rgba(255,99,132,1)',
+        pointBackgroundColor: 'rgba(255,99,132,1)'
+      }
+    ]
+  }
+});
+</script>
+{% endblock %}
