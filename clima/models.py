@@ -16,7 +16,7 @@ class Clima(models.Model):
     humedad = models.IntegerField()
     presion = models.IntegerField()
     descripcion = models.CharField(max_length=100)
-    icono = models.CharField(max_length=5, blank=True)  # Se usa para mostrar el ícono del clima
+    icono = models.CharField(max_length=5, blank=True)
 
     def __str__(self):
         return f"{self.ciudad.nombre} - {self.fecha_consulta.strftime('%Y-%m-%d %H:%M')}"

@@ -3,10 +3,8 @@
 <div class="container mt-4">
   <h2>Gráficos del Clima</h2>
 
-  <!-- Tarjetas resumen -->
   <div class="row" id="tarjetas"></div>
 
-  <!-- Gráfico de líneas: temperatura histórica -->
   <div class="card my-4">
     <div class="card-body">
       <h5>Temperatura Histórica</h5>
@@ -14,7 +12,6 @@
     </div>
   </div>
 
-  <!-- Gráfico de barras: temperatura actual -->
   <div class="card my-4">
     <div class="card-body">
       <h5>Temperatura Actual por Ciudad</h5>
@@ -22,7 +19,6 @@
     </div>
   </div>
 
-  <!-- Radar: humedad/presión -->
   <div class="card my-4">
     <div class="card-body">
       <h5>Humedad y Presión Actual</h5>
@@ -36,7 +32,6 @@
 const historico = {{ historico|safe }};
 const actuales = {{ actuales|safe }};
 
-// Tarjetas
 const tarjetas = document.getElementById('tarjetas');
 actuales.forEach(c => {
   tarjetas.innerHTML += `
@@ -52,7 +47,6 @@ actuales.forEach(c => {
     </div>`;
 });
 
-// Gráfico de líneas
 const ctxLine = document.getElementById('graficoLineas').getContext('2d');
 let datasets = [];
 for (let ciudad in historico) {
@@ -72,7 +66,6 @@ new Chart(ctxLine, {
   }
 });
 
-// Gráfico de barras
 new Chart(document.getElementById('graficoBarras'), {
   type: 'bar',
   data: {
@@ -85,7 +78,6 @@ new Chart(document.getElementById('graficoBarras'), {
   }
 });
 
-// Radar
 new Chart(document.getElementById('graficoRadar'), {
   type: 'radar',
   data: {
